@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         게임닷 원신 맵스 확장
 // @namespace    view underground map
-// @version      1.2
+// @version      1.3
 // @description  원신 맵스에 지하맵 기능을 추가하는 스크립트
 // @author       juhyeon-cha
 // @match        https://genshin.gamedot.org/?mid=genshinmaps
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=gamedot.org
-// @updatelog    2023/02/25 v1.2 아란나라 크기/위치 조정
+// @updatelog    2023/02/25 v1.3 사막 지하 맵 추가
 // @homepageURL  https://github.com/juhyeon-cha/genshin-maps-extension/
 // @downloadURL  https://github.com/juhyeon-cha/genshin-maps-extension/raw/main/extension.js
 // @updateURL    https://github.com/juhyeon-cha/genshin-maps-extension/raw/main/extension.js
@@ -136,12 +136,12 @@ const UNDERGROUND_IMAGES = [
         'size': [800, 687, 39],
         'offset': [4983, 7371]
     },
-    // {
-    //     'name': '야스나_유경_남_0',
-    //     'url': 'https://i.imgur.com/ckZNZsL.png',
-    //     'size': [700, 507, 30],
-    //     'offset': [4000, 7000]
-    // },
+    {
+        'name': '야스나_유경_남_0',
+        'url': 'https://i.imgur.com/ckZNZsL.png',
+        'size': [700, 507, 55],
+        'offset': [4629, 8360]
+    },
     // {
     //     'name': '차트라캄_동굴_0',
     //     'url': 'https://i.imgur.com/K9iZfPB.png',
@@ -166,89 +166,47 @@ const UNDERGROUND_IMAGES = [
     //     'size': [700, 400, 30],
     //     'offset': [4000, 7000]
     // },
-    // {
-    //     'name': '다흐리_계곡_서_0',
-    //     'url': 'https://i.imgur.com/OcLNox6.png',
-    //     'size': [700, 856, 30],
-    //     'offset': [4000, 7000]
-    // },
-    // {
-    //     'name': '다흐리_계곡_서_1',
-    //     'url': 'https://i.imgur.com/28VTfpy.png',
-    //     'size': [700, 974, 30],
-    //     'offset': [4000, 7000]
-    // },
-    // {
-    //     'name': '도피의_언덕_남서_0',
-    //     'url': 'https://i.imgur.com/0GbvGew.png',
-    //     'size': [2290, 840, 30],
-    //     'offset': [4000, 7000]
-    // },
+    {
+        'name': '다흐리_계곡_서_0',
+        'url': 'https://i.imgur.com/OcLNox6.png',
+        'size': [700, 856, 42],
+        'offset': [3554, 10095]
+    },
+    {
+        'name': '다흐리_계곡_서_1',
+        'url': 'https://i.imgur.com/28VTfpy.png',
+        'size': [700, 974, 42],
+        'offset': [3793, 10023]
+    },
+    {
+        'name': '도피의_언덕_남서_0',
+        'url': 'https://i.imgur.com/0GbvGew.png',
+        'size': [2290, 840, 14],
+        'offset': [2117, 9974]
+    },
     // {
     //     'name': '부러진_정강이_협곡_0',
     //     'url': 'https://i.imgur.com/SESBHtN.png',
     //     'size': [700, 626, 30],
     //     'offset': [4000, 7000]
     // },
-    // {
-    //     'name': '세_운하의_땅_0',
-    //     'url': 'https://i.imgur.com/LK56eHQ.png',
-    //     'size': [800, 637, 30],
-    //     'offset': [4000, 7000]
-    // },
-    // {
-    //     'name': '세_운하의_땅_북_0',
-    //     'url': 'https://i.imgur.com/iQKgK1j.png',
-    //     'size': [600, 621, 30],
-    //     'offset': [4000, 7000]
-    // },
-    // {
-    //     'name': '신이_버린_신전_0',
-    //     'url': 'https://i.imgur.com/LQqO1Cy.png',
-    //     'size': [700, 727, 30],
-    //     'offset': [4000, 7000]
-    // },
-    // {
-    //     'name': '신이_버린_신전_북_0',
-    //     'url': 'https://i.imgur.com/MmVuqWP.png',
-    //     'size': [700, 550, 30],
-    //     'offset': [4000, 7000]
-    // },
-    // {
-    //     'name': '신이_버린_신전_북_1',
-    //     'url': 'https://i.imgur.com/wbttkgz.png',
-    //     'size': [500, 377, 30],
-    //     'offset': [4000, 7000]
-    // },
-    // {
-    //     'name': '알_아지프의_모래_0',
-    //     'url': 'https://i.imgur.com/qLHMu2T.png',
-    //     'size': [700, 760, 30],
-    //     'offset': [4000, 7000]
-    // },
-    // {
-    //     'name': '영원의_오아시스_0',
-    //     'url': 'https://i.imgur.com/lH0bAk5.png',
-    //     'size': [700, 942, 30],
-    //     'offset': [4000, 7000]
-    // },
-    // {
-    //     'name': '자갈의_언덕_0',
-    //     'url': 'https://i.imgur.com/FTOn4CI.png',
-    //     'size': [700, 718, 30],
-    //     'offset': [4000, 7000]
-    // },
-    // {
-    //     'name': '자갈의_언덕_1',
-    //     'url': 'https://i.imgur.com/5BiYsbf.png',
-    //     'size': [700, 1075, 30],
-    //     'offset': [4000, 7000]
-    // },
+    {
+        'name': '세_운하의_땅_북_0',
+        'url': 'https://i.imgur.com/iQKgK1j.png',
+        'size': [600, 621, 61],
+        'offset': [2784, 7347]
+    },
+    {
+        'name': '세_운하의_땅_0',
+        'url': 'https://i.imgur.com/LK56eHQ.png',
+        'size': [800, 637, 60],
+        'offset': [2881, 7510]
+    },
     {
         'name': '적왕의_무덤_0',
         'url': 'https://i.imgur.com/4AoJPpC.png',
-        'size': [1514, 1579, 60],
-        'offset': [2347, 9000]
+        'size': [1514, 1579, 57],
+        'offset': [2354, 9001]
     },
     {
         'name': '적왕의_무덤_1',
@@ -262,12 +220,54 @@ const UNDERGROUND_IMAGES = [
     //     'size': [600, 1398, 30],
     //     'offset': [4000, 7000]
     // },
+    {
+        'name': '신이_버린_신전_0',
+        'url': 'https://i.imgur.com/LQqO1Cy.png',
+        'size': [700, 727, 70],
+        'offset': [2671, 8808]
+    },
+    {
+        'name': '신이_버린_신전_북_0',
+        'url': 'https://i.imgur.com/MmVuqWP.png',
+        'size': [700, 550, 70],
+        'offset': [2820, 8358]
+    },
+    {
+        'name': '신이_버린_신전_북_1',
+        'url': 'https://i.imgur.com/wbttkgz.png',
+        'size': [500, 377, 32],
+        'offset': [3076, 8653]
+    },
     // {
-    //     'name': '희생_함정_0',
-    //     'url': 'https://i.imgur.com/dJhrFfI.png',
-    //     'size': [800, 732, 30],
+    //     'name': '알_아지프의_모래_0',
+    //     'url': 'https://i.imgur.com/qLHMu2T.png',
+    //     'size': [700, 760, 30],
     //     'offset': [4000, 7000]
     // },
+    {
+        'name': '영원의_오아시스_0',
+        'url': 'https://i.imgur.com/lH0bAk5.png',
+        'size': [700, 942, 48],
+        'offset': [3081, 7727]
+    },
+    {
+        'name': '자갈의_언덕_0',
+        'url': 'https://i.imgur.com/FTOn4CI.png',
+        'size': [700, 718, 66],
+        'offset': [2609, 9701]
+    },
+    {
+        'name': '자갈의_언덕_1',
+        'url': 'https://i.imgur.com/5BiYsbf.png',
+        'size': [700, 1075, 29],
+        'offset': [2402, 9663]
+    },
+    {
+        'name': '희생_함정_0',
+        'url': 'https://i.imgur.com/dJhrFfI.png',
+        'size': [800, 732, 73],
+        'offset': [3871, 9349]
+    },
 ];
 
 let IS_UNDERGROUND_ACTIVE = false;
