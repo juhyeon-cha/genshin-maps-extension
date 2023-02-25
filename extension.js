@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         게임닷 원신 맵스 확장
 // @namespace    view underground map
-// @version      1.5
+// @version      1.6
 // @description  원신 맵스에 지하맵 기능을 추가하는 스크립트
 // @author       juhyeon-cha
 // @match        https://genshin.gamedot.org/?mid=genshinmaps
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=gamedot.org
-// @updatelog    2023/02/25 v1.5 기본 기능 개발 완료
+// @updatelog    2023/02/25 v1.6 활성맵 핀 기능 추가
 // @homepageURL  https://github.com/juhyeon-cha/genshin-maps-extension/
 // @downloadURL  https://github.com/juhyeon-cha/genshin-maps-extension/raw/main/extension.js
 // @updateURL    https://github.com/juhyeon-cha/genshin-maps-extension/raw/main/extension.js
@@ -271,16 +271,17 @@ const UNDERGROUND_IMAGES = [
 ];
 
 let IS_UNDERGROUND_ACTIVE = false;
+let IS_VISIBLE_ACTIVE_MAPS_PIN = true;
 
 function addExtensionStyle() {
     const style = document.createElement('style');
     style.innerHTML = `
-    .underground {
+    .maps-extension {
         user-select: none;
         display: block;
         position: fixed;
     }
-    .underground-switch {
+    .maps-extension-switch {
         right: 20px;
         bottom: 110px;
         width: 72px;
@@ -291,13 +292,13 @@ function addExtensionStyle() {
         background-size: 100%;
         cursor: pointer;
     }
-    .underground-switch.on {
+    .maps-extension-switch.on {
         background-image: url(${TOGGLE_ON});
     }
-    .underground-switch-label {
+    .maps-extension-switch-label {
         right: 20px;
         bottom: 130px;
-        width: 72px;
+        width: 77px;
         height: 36px;
         color: #ece5d8;
         text-shadow: -1px 0 #3b4354, 0 1px #3b4354, 1px 0 #3b4354, 0 -1px #3b4354;
@@ -331,26 +332,33 @@ function addExtensionStyle() {
 function addButtonEvent() {
     // 애드온 숨김/표시 시 지하 맵 버튼 위치 변경
     document.querySelector('.maps-addons-menu[data-event="hide"]').addEventListener('click', () => {
-        document.getElementById('undergroundSwitch').style.bottom = '40px';
+        document.getElementById('visibleActiveMapsPinSwitchLabel').style.bottom = '130px';
+        document.getElementById('visibleActiveMapsPinSwitch').style.bottom = '110px';
         document.getElementById('undergroundSwitchLabel').style.bottom = '60px';
+        document.getElementById('undergroundSwitch').style.bottom = '40px';
     });
     document.querySelector('.maps-addons-show[data-event="show"]').addEventListener('click', () => {
-        document.getElementById('undergroundSwitch').style.bottom = '110px';
+        document.getElementById('visibleActiveMapsPinSwitchLabel').style.bottom = '200px';
+        document.getElementById('visibleActiveMapsPinSwitch').style.bottom = '180px';
         document.getElementById('undergroundSwitchLabel').style.bottom = '130px';
+        document.getElementById('undergroundSwitch').style.bottom = '110px';
     });
 }
 
-function addUndergroundSwitch() {
+function addMapsExtensionSwitch() {
     var template = document.createElement('template');
     template.innerHTML = `
-    <div id="undergroundSwitchWrapper" class="underground">
-        <div id="undergroundSwitchLabel" class="underground underground-switch-label">지하 맵</div>
-        <div id="undergroundSwitch" class="underground underground-switch"></div>
+    <div class="maps-extension">
+        <div id="visibleActiveMapsPinSwitchLabel" style="bottom: 200px;" class="maps-extension maps-extension-switch-label">활성맵 핀</div>
+        <div id="visibleActiveMapsPinSwitch" style="bottom: 180px;" class="maps-extension maps-extension-switch on"></div>
+        <div id="undergroundSwitchLabel" style="bottom: 130px;" class="maps-extension maps-extension-switch-label">지하 맵</div>
+        <div id="undergroundSwitch" style="bottom: 110px;" class="maps-extension maps-extension-switch"></div>
     </div>`;
 
     template = template.content.childNodes[1];
     document.body.appendChild(template);
     document.getElementById('undergroundSwitch').addEventListener('click', clickUndergroundSwitch);
+    document.getElementById('visibleActiveMapsPinSwitch').addEventListener('click', clickVisibleActiveMapsPinSwitch);
 }
 
 function clickUndergroundSwitch() {
@@ -359,7 +367,15 @@ function clickUndergroundSwitch() {
     IS_UNDERGROUND_ACTIVE ? undergroundSwitch.classList.add('on') : undergroundSwitch.classList.remove('on');
     IS_UNDERGROUND_ACTIVE ? addUndergroundLayer() : removeUndergroundLayer();
 
-    drawMapsLayer();
+    setPinObjectRefresh();
+}
+
+function clickVisibleActiveMapsPinSwitch() {
+    var visibleActiveMapsPinSwitch = document.getElementById('visibleActiveMapsPinSwitch');
+    IS_VISIBLE_ACTIVE_MAPS_PIN = !IS_VISIBLE_ACTIVE_MAPS_PIN;
+    IS_VISIBLE_ACTIVE_MAPS_PIN ? visibleActiveMapsPinSwitch.classList.add('on') : visibleActiveMapsPinSwitch.classList.remove('on');
+
+    setPinObjectRefresh();
 }
 
 function addUndergroundLayer() {
@@ -393,12 +409,19 @@ function removeUndergroundLayer() {
     document.getElementById('mapsLayerUnderground').remove();
 }
 
-function setUndergroundLayerScale() {
+function drawUndergroundLayer() {
     if (!IS_UNDERGROUND_ACTIVE) return;
 
     const layerScale = MAPS_ViewSize / MAPS_Size;
     const undergroundLayer = document.getElementById('mapsLayerUnderground');
     undergroundLayer.style.transform = `scale(${layerScale})`;
+}
+
+function removeDisabledMapsPin() {
+    if (!IS_VISIBLE_ACTIVE_MAPS_PIN) return;
+
+    const dataSelector = IS_UNDERGROUND_ACTIVE ? ':not([data-is-underground])' : '[data-is-underground]';
+    document.querySelectorAll(`#mapsLayerPoint > .maps-point${dataSelector}`).forEach(element => element.remove());
 }
 
 // 
@@ -407,7 +430,8 @@ drawMapsLayer = (function (originDrawMapsLayer) {
 
     return (boolPanelHide) => {
         originDrawMapsLayer(boolPanelHide);
-        setUndergroundLayerScale();
+        drawUndergroundLayer();
+        removeDisabledMapsPin();
     };
 
 }(drawMapsLayer));
@@ -416,5 +440,5 @@ drawMapsLayer = (function (originDrawMapsLayer) {
 (function () {
     addExtensionStyle();
     addButtonEvent();
-    addUndergroundSwitch();
+    addMapsExtensionSwitch();
 }());
