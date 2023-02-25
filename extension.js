@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         게임닷 원신 맵스 확장
 // @namespace    view underground map
-// @version      1.0
+// @version      1.1
 // @description  원신 맵스에 지하맵 기능을 추가하는 스크립트
 // @author       juhyeon-cha
 // @match        https://genshin.gamedot.org/?mid=genshinmaps
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=gamedot.org
-// @updatelog    2023/02/25 v1.0
+// @updatelog    2023/02/25 v1.1 아란나라 동편 추가
 // @homepageURL  https://github.com/juhyeon-cha/genshin-maps-extension/
 // @downloadURL  https://github.com/juhyeon-cha/genshin-maps-extension/raw/main/extension.js
 // @updateURL    https://github.com/juhyeon-cha/genshin-maps-extension/raw/main/extension.js
@@ -130,12 +130,12 @@ const UNDERGROUND_IMAGES = [
         'size': [700, 647, 40],
         'offset': [5078, 8937]
     },
-    // {
-    //     'name': '아란나라_동_0',
-    //     'url': 'https://i.imgur.com/BkbmTpH.png',
-    //     'size': [800, 687, 30],
-    //     'offset': [4000, 7000]
-    // },
+    {
+        'name': '아란나라_동_0',
+        'url': 'https://i.imgur.com/BkbmTpH.png',
+        'size': [800, 687, 30],
+        'offset': [5011, 7389]
+    },
     // {
     //     'name': '야스나_유경_남_0',
     //     'url': 'https://i.imgur.com/ckZNZsL.png',
