@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         게임닷 원신 맵스 확장
 // @namespace    view underground map
-// @version      1.3
+// @version      1.4
 // @description  원신 맵스에 지하맵 기능을 추가하는 스크립트
 // @author       juhyeon-cha
 // @match        https://genshin.gamedot.org/?mid=genshinmaps
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=gamedot.org
-// @updatelog    2023/02/25 v1.3 사막 지하 맵 추가
+// @updatelog    2023/02/25 v1.4 지하 맵 완료, 기타 편의성 추가
 // @homepageURL  https://github.com/juhyeon-cha/genshin-maps-extension/
 // @downloadURL  https://github.com/juhyeon-cha/genshin-maps-extension/raw/main/extension.js
 // @updateURL    https://github.com/juhyeon-cha/genshin-maps-extension/raw/main/extension.js
@@ -142,30 +142,30 @@ const UNDERGROUND_IMAGES = [
         'size': [700, 507, 55],
         'offset': [4629, 8360]
     },
-    // {
-    //     'name': '차트라캄_동굴_0',
-    //     'url': 'https://i.imgur.com/K9iZfPB.png',
-    //     'size': [700, 1081, 30],
-    //     'offset': [4000, 7000]
-    // },
-    // {
-    //     'name': '다르알시파_0',
-    //     'url': 'https://i.imgur.com/3qLdt4p.png',
-    //     'size': [700, 828, 30],
-    //     'offset': [4000, 7000]
-    // },
-    // {
-    //     'name': '다마반드산_0',
-    //     'url': 'https://i.imgur.com/2WHSZFL.png',
-    //     'size': [800, 761, 30],
-    //     'offset': [4000, 7000]
-    // },
-    // {
-    //     'name': '다섯_오아시스의_생존자_0',
-    //     'url': 'https://i.imgur.com/qD1zPv5.png',
-    //     'size': [700, 400, 30],
-    //     'offset': [4000, 7000]
-    // },
+    {
+        'name': '차트라캄_동굴_0',
+        'url': 'https://i.imgur.com/K9iZfPB.png',
+        'size': [700, 1081, 43],
+        'offset': [5434, 6830]
+    },
+    {
+        'name': '다르알시파_0',
+        'url': 'https://i.imgur.com/3qLdt4p.png',
+        'size': [700, 828, 34],
+        'offset': [4335, 9405]
+    },
+    {
+        'name': '다마반드산_0',
+        'url': 'https://i.imgur.com/2WHSZFL.png',
+        'size': [800, 761, 52],
+        'offset': [3321, 7948]
+    },
+    {
+        'name': '다섯_오아시스의_생존자_0',
+        'url': 'https://i.imgur.com/qD1zPv5.png',
+        'size': [700, 400, 71],
+        'offset': [3589, 7450]
+    },
     {
         'name': '다흐리_계곡_서_0',
         'url': 'https://i.imgur.com/OcLNox6.png',
@@ -184,12 +184,12 @@ const UNDERGROUND_IMAGES = [
         'size': [2290, 840, 14],
         'offset': [2117, 9974]
     },
-    // {
-    //     'name': '부러진_정강이_협곡_0',
-    //     'url': 'https://i.imgur.com/SESBHtN.png',
-    //     'size': [700, 626, 30],
-    //     'offset': [4000, 7000]
-    // },
+    {
+        'name': '부러진_정강이_협곡_0',
+        'url': 'https://i.imgur.com/SESBHtN.png',
+        'size': [700, 626, 74],
+        'offset': [2485, 7944]
+    },
     {
         'name': '세_운하의_땅_북_0',
         'url': 'https://i.imgur.com/iQKgK1j.png',
@@ -214,12 +214,12 @@ const UNDERGROUND_IMAGES = [
         'size': [700, 1162, 41],
         'offset': [2796, 9333]
     },
-    // {
-    //     'name': '적왕의_무덤_서_0',
-    //     'url': 'https://i.imgur.com/ZrDV2JC.png',
-    //     'size': [600, 1398, 30],
-    //     'offset': [4000, 7000]
-    // },
+    {
+        'name': '적왕의_무덤_서_0',
+        'url': 'https://i.imgur.com/ZrDV2JC.png',
+        'size': [600, 1398, 42],
+        'offset': [2452, 8904]
+    },
     {
         'name': '신이_버린_신전_0',
         'url': 'https://i.imgur.com/LQqO1Cy.png',
@@ -238,12 +238,12 @@ const UNDERGROUND_IMAGES = [
         'size': [500, 377, 32],
         'offset': [3076, 8653]
     },
-    // {
-    //     'name': '알_아지프의_모래_0',
-    //     'url': 'https://i.imgur.com/qLHMu2T.png',
-    //     'size': [700, 760, 30],
-    //     'offset': [4000, 7000]
-    // },
+    {
+        'name': '알_아지프의_모래_0',
+        'url': 'https://i.imgur.com/qLHMu2T.png',
+        'size': [700, 760, 76],
+        'offset': [3760, 7927]
+    },
     {
         'name': '영원의_오아시스_0',
         'url': 'https://i.imgur.com/lH0bAk5.png',
@@ -271,7 +271,6 @@ const UNDERGROUND_IMAGES = [
 ];
 
 let IS_UNDERGROUND_ACTIVE = false;
-let IS_UNDERGROUND_LAYER_ADDED = false;
 
 function addExtensionStyle() {
     const style = document.createElement('style');
@@ -283,7 +282,7 @@ function addExtensionStyle() {
     }
     .underground-switch {
         right: 20px;
-        bottom: 70px;
+        bottom: 110px;
         width: 72px;
         height: 36px;
         background-image: url(${TOGGLE_OFF});
@@ -297,7 +296,7 @@ function addExtensionStyle() {
     }
     .underground-switch-label {
         right: 20px;
-        bottom: 90px;
+        bottom: 130px;
         width: 72px;
         height: 36px;
         color: #ece5d8;
@@ -329,10 +328,22 @@ function addExtensionStyle() {
     document.head.appendChild(style);
 }
 
+function addButtonEvent() {
+    // 애드온 숨김/표시 시 지하 맵 버튼 위치 변경
+    document.querySelector('.maps-addons-menu[data-event="hide"]').addEventListener('click', () => {
+        document.getElementById('undergroundSwitch').style.bottom = '40px';
+        document.getElementById('undergroundSwitchLabel').style.bottom = '60px';
+    });
+    document.querySelector('.maps-addons-show[data-event="show"]').addEventListener('click', () => {
+        document.getElementById('undergroundSwitch').style.bottom = '110px';
+        document.getElementById('undergroundSwitchLabel').style.bottom = '130px';
+    });
+}
+
 function addUndergroundSwitch() {
     var template = document.createElement('template');
     template.innerHTML = `
-    <div id="undergroundSwitchWrapper" class="pc-only underground">
+    <div id="undergroundSwitchWrapper" class="underground">
         <div id="undergroundSwitchLabel" class="underground underground-switch-label">지하 맵</div>
         <div id="undergroundSwitch" class="underground underground-switch"></div>
     </div>`;
@@ -346,8 +357,8 @@ function clickUndergroundSwitch() {
     var undergroundSwitch = document.getElementById('undergroundSwitch');
     IS_UNDERGROUND_ACTIVE = !IS_UNDERGROUND_ACTIVE;
     IS_UNDERGROUND_ACTIVE ? undergroundSwitch.classList.add('on') : undergroundSwitch.classList.remove('on');
+    IS_UNDERGROUND_ACTIVE ? addUndergroundLayer() : removeUndergroundLayer();
 
-    (IS_UNDERGROUND_ACTIVE && !IS_UNDERGROUND_LAYER_ADDED) ? addUndergroundLayer() : removeUndergroundLayer();
     drawMapsLayer();
 }
 
@@ -357,14 +368,14 @@ function addUndergroundLayer() {
 
     var template = document.createElement('template');
     template.innerHTML = `
-    <div id="mapsLayerUnderground" class="pc-only underground-layer" style="width: 17920px; height: 17920px; transform: scale(${layerScale});">
+    <div id="mapsLayerUnderground" class="underground-layer" style="width: 17920px; height: 17920px; transform: scale(${layerScale});">
     </div>`;
     const undergroundLayer = template.content.childNodes[1];
 
     UNDERGROUND_IMAGES.forEach((image, index) => {
         var template = document.createElement('template');
         template.innerHTML = `
-        <div class="pc-only underground-image" data-index="${index}" style="width: ${image.size[0]}px; height: ${image.size[1]}px; transform: translate(${image.offset[0]}px, ${image.offset[1]}px) scale(1);">
+        <div class="underground-image" data-index="${index}" style="width: ${image.size[0]}px; height: ${image.size[1]}px; transform: translate(${image.offset[0]}px, ${image.offset[1]}px) scale(1);">
             <div style="background-image: url(${image.url}); background-size: ${image.size[2]}%"></div>
         </div>`;
 
@@ -372,7 +383,7 @@ function addUndergroundLayer() {
         undergroundLayer.appendChild(template);
     });
     template = document.createElement('template');
-    template.innerHTML = '<div style="background-color: black; opacity: 0.6; width: 100%; height: 100%;"></div>';
+    template.innerHTML = '<div style="background-color: black; opacity: 0.5; width: 100%; height: 100%;"></div>';
     template = template.content.childNodes[0];
     undergroundLayer.appendChild(template);
     layer.after(undergroundLayer);
@@ -404,5 +415,6 @@ drawMapsLayer = (function (originDrawMapsLayer) {
 // Main
 (function () {
     addExtensionStyle();
+    addButtonEvent();
     addUndergroundSwitch();
 }());
