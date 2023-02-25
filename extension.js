@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         게임닷 원신 맵스 확장
 // @namespace    view underground map
-// @version      1.4
+// @version      1.5
 // @description  원신 맵스에 지하맵 기능을 추가하는 스크립트
 // @author       juhyeon-cha
 // @match        https://genshin.gamedot.org/?mid=genshinmaps
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=gamedot.org
-// @updatelog    2023/02/25 v1.4 지하 맵 완료, 기타 편의성 추가
+// @updatelog    2023/02/25 v1.5 기본 기능 개발 완료
 // @homepageURL  https://github.com/juhyeon-cha/genshin-maps-extension/
 // @downloadURL  https://github.com/juhyeon-cha/genshin-maps-extension/raw/main/extension.js
 // @updateURL    https://github.com/juhyeon-cha/genshin-maps-extension/raw/main/extension.js
@@ -375,7 +375,7 @@ function addUndergroundLayer() {
     UNDERGROUND_IMAGES.forEach((image, index) => {
         var template = document.createElement('template');
         template.innerHTML = `
-        <div class="underground-image" data-index="${index}" style="width: ${image.size[0]}px; height: ${image.size[1]}px; transform: translate(${image.offset[0]}px, ${image.offset[1]}px) scale(1);">
+        <div class="underground-image" data-index="${index}" data-name="${image.name}" style="width: ${image.size[0]}px; height: ${image.size[1]}px; transform: translate(${image.offset[0]}px, ${image.offset[1]}px) scale(1);">
             <div style="background-image: url(${image.url}); background-size: ${image.size[2]}%"></div>
         </div>`;
 
