@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         게임닷 원신 맵스 확장
 // @namespace    view underground map
-// @version      1.6
-// @description  원신 맵스에 지하맵 기능을 추가하는 스크립트
+// @version      1.7
+// @description  원신 맵스에 여러 기능을 추가하는 유저스크립트
 // @author       juhyeon-cha
 // @match        https://genshin.gamedot.org/?mid=genshinmaps
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=gamedot.org
-// @updatelog    2023/02/25 v1.6 활성맵 핀 기능 추가
+// @updatelog    2023/02/27 v1.7 버튼 가려지는 버그 수정
 // @homepageURL  https://github.com/juhyeon-cha/genshin-maps-extension/
 // @downloadURL  https://github.com/juhyeon-cha/genshin-maps-extension/raw/main/extension.js
 // @updateURL    https://github.com/juhyeon-cha/genshin-maps-extension/raw/main/extension.js
@@ -280,10 +280,40 @@ function addExtensionStyle() {
         user-select: none;
         display: block;
         position: fixed;
+        right: 20px;
+        bottom: 65px;
+    }
+    @media screen and (max-width: 1280px) and (min-width:768px) and (min-height:500px) {
+        #mapsAddonsMenu.close ~ .maps-extension {
+            bottom: 45px !important;
+        }
+        #mapsAddonsMenu:not(.close) ~ .maps-extension {
+            bottom: 120px !important;
+        }
+    }
+    @media screen and (max-width: 768px) and (orientation: portrait), only screen and (max-height: 500px) and (orientation: landscape) {
+        .maps-extension {
+            right: 5px !important;
+            bottom: 11.5vh !important;
+        }
+    }
+    @media screen and (max-height: 500px) and (min-width: 400px) {
+        .maps-extension {
+            right: 16vh !important;
+            bottom: 10px !important;
+        }
+        .maps-extension-switch {
+            width: 15vh !important;
+            height: 7.5vh !important;
+        }
+        .maps-extension-switch-label {
+            width: 15vh !important;
+            font-size: 12px !important;
+            padding-top: 3px !important;
+            padding-bottom: 1px !important;
+        }
     }
     .maps-extension-switch {
-        right: 20px;
-        bottom: 110px;
         width: 72px;
         height: 36px;
         background-image: url(${TOGGLE_OFF});
@@ -296,15 +326,15 @@ function addExtensionStyle() {
         background-image: url(${TOGGLE_ON});
     }
     .maps-extension-switch-label {
-        right: 20px;
-        bottom: 130px;
         width: 77px;
-        height: 36px;
         color: #ece5d8;
         text-shadow: -1px 0 #3b4354, 0 1px #3b4354, 1px 0 #3b4354, 0 -1px #3b4354;
         font-size: 18px;
-        margin-bottom: 4px;
-        padding-left: 8px;
+        padding-top: 6px;
+        padding-bottom: 2px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
     .underground-layer {
         position: absolute;
@@ -329,34 +359,18 @@ function addExtensionStyle() {
     document.head.appendChild(style);
 }
 
-function addButtonEvent() {
-    // 애드온 숨김/표시 시 지하 맵 버튼 위치 변경
-    document.querySelector('.maps-addons-menu[data-event="hide"]').addEventListener('click', () => {
-        document.getElementById('visibleActiveMapsPinSwitchLabel').style.bottom = '130px';
-        document.getElementById('visibleActiveMapsPinSwitch').style.bottom = '110px';
-        document.getElementById('undergroundSwitchLabel').style.bottom = '60px';
-        document.getElementById('undergroundSwitch').style.bottom = '40px';
-    });
-    document.querySelector('.maps-addons-show[data-event="show"]').addEventListener('click', () => {
-        document.getElementById('visibleActiveMapsPinSwitchLabel').style.bottom = '200px';
-        document.getElementById('visibleActiveMapsPinSwitch').style.bottom = '180px';
-        document.getElementById('undergroundSwitchLabel').style.bottom = '130px';
-        document.getElementById('undergroundSwitch').style.bottom = '110px';
-    });
-}
-
 function addMapsExtensionSwitch() {
     var template = document.createElement('template');
     template.innerHTML = `
     <div class="maps-extension">
-        <div id="visibleActiveMapsPinSwitchLabel" style="bottom: 200px;" class="maps-extension maps-extension-switch-label">활성맵 핀</div>
-        <div id="visibleActiveMapsPinSwitch" style="bottom: 180px;" class="maps-extension maps-extension-switch on"></div>
-        <div id="undergroundSwitchLabel" style="bottom: 130px;" class="maps-extension maps-extension-switch-label">지하 맵</div>
-        <div id="undergroundSwitch" style="bottom: 110px;" class="maps-extension maps-extension-switch"></div>
+        <div id="visibleActiveMapsPinSwitchLabel" class="maps-extension-switch-label">활성맵 핀</div>
+        <div id="visibleActiveMapsPinSwitch" class="maps-extension-switch on"></div>
+        <div id="undergroundSwitchLabel" class="maps-extension-switch-label">지하 맵</div>
+        <div id="undergroundSwitch" class="maps-extension-switch"></div>
     </div>`;
 
     template = template.content.childNodes[1];
-    document.body.appendChild(template);
+    document.getElementById('mapsAddonsMenu').after(template);
     document.getElementById('undergroundSwitch').addEventListener('click', clickUndergroundSwitch);
     document.getElementById('visibleActiveMapsPinSwitch').addEventListener('click', clickVisibleActiveMapsPinSwitch);
 }
@@ -424,7 +438,6 @@ function removeDisabledMapsPin() {
     document.querySelectorAll(`#mapsLayerPoint > .maps-point${dataSelector}`).forEach(element => element.remove());
 }
 
-// 
 drawMapsLayer = (function (originDrawMapsLayer) {
     'use strict';
 
@@ -439,6 +452,5 @@ drawMapsLayer = (function (originDrawMapsLayer) {
 // Main
 (function () {
     addExtensionStyle();
-    addButtonEvent();
     addMapsExtensionSwitch();
 }());
