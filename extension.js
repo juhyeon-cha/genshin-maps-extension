@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         게임닷 원신 맵스 확장
 // @namespace    view underground map
-// @version      1.7
+// @version      1.8
 // @description  원신 맵스에 여러 기능을 추가하는 유저스크립트
 // @author       juhyeon-cha
 // @match        https://genshin.gamedot.org/?mid=genshinmaps
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=gamedot.org
-// @updatelog    2023/02/27 v1.7 버튼 가려지는 버그 수정
+// @updatelog    2023/04/03 v1.8 핀 그룹화 오류 수정
 // @homepageURL  https://github.com/juhyeon-cha/genshin-maps-extension/
 // @downloadURL  https://github.com/juhyeon-cha/genshin-maps-extension/raw/main/extension.js
 // @updateURL    https://github.com/juhyeon-cha/genshin-maps-extension/raw/main/extension.js
@@ -423,6 +423,55 @@ function removeUndergroundLayer() {
     document.getElementById('mapsLayerUnderground').remove();
 }
 
+function adjustMapsLayer() {
+    if (IS_VISIBLE_ACTIVE_MAPS_PIN === false) return;
+    if (Object.prototype.toString.call(MAPS_ViewPin) != '[object Set]' || MAPS_ViewPin.size <= 0) return;
+
+    MAPS_ViewPin.forEach((v) => {
+        const arrDrawPin = MAPS_PinDraw.get(v);
+        if (Object.prototype.toString.call(arrDrawPin) != '[object Array]' || arrDrawPin.length <= 0) return true;
+
+        mapPinGroup = new Map();
+        arrDrawPin.forEach((point) => {
+            if (MAPS_State.pinGroup == true && MAPS_PinLoad[point.pin].offcombine == false) {
+                // 핀 그룹화를 위해 평균 구하기.
+                let arrPinGroup = mapPinGroup.get(point.pin);
+                arrPinGroup = arrPinGroup ? arrPinGroup : { x: 0, y: 0, state: 0, length: 0, underground_state: 0, underground_length: 0, point: point };
+                arrPinGroup.x += point.x;
+                arrPinGroup.y += point.y;
+                arrPinGroup.length++;
+                arrPinGroup.state = point.state ? arrPinGroup.state + 1 : arrPinGroup.state;
+                if (point.tag?.includes("지하")) {
+                    arrPinGroup.underground_state = point.state ? arrPinGroup.underground_state + 1 : arrPinGroup.underground_state;
+                    arrPinGroup.underground_length++;
+                }
+
+                mapPinGroup.set(point.pin, arrPinGroup);
+                return false;
+            }
+        });
+
+        if (MAPS_State.pinGroup == true) {
+            mapPinGroup.forEach((value) => {
+                const pt = value.point;
+                const objectPoint = document.querySelector(`.maps-point.group[data-pin="${pt.pin}"][data-point="${pt.point}"]`);
+                if (objectPoint) {
+                    const state = IS_UNDERGROUND_ACTIVE ? value.underground_state : (value.state - value.underground_state);
+                    const length = IS_UNDERGROUND_ACTIVE ? value.underground_length : (value.length - value.underground_length);
+                    const p = objectPoint.querySelector('p');
+                    p.innerText = state + "/" + length;
+                    objectPoint.setAttribute("data-state", state == length ? "true" : "false");
+                    if (IS_UNDERGROUND_ACTIVE && value.underground_length >= 1) {
+                        objectPoint.dataset.isUnderground = true;
+                    } else {
+                        delete objectPoint.dataset.isUnderground;
+                    }
+                }
+            });
+        }
+    });
+}
+
 function drawUndergroundLayer() {
     if (!IS_UNDERGROUND_ACTIVE) return;
 
@@ -443,6 +492,7 @@ drawMapsLayer = (function (originDrawMapsLayer) {
 
     return (boolPanelHide) => {
         originDrawMapsLayer(boolPanelHide);
+        adjustMapsLayer();
         drawUndergroundLayer();
         removeDisabledMapsPin();
     };

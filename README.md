@@ -1,11 +1,14 @@
 
-# 게임닷 원신 맵스 확장 스크립트
+# GAMEDOT genshin maps extension userscript
 
-## 도움 주신 분
+> [https://genshin.gamedot.org/?mid=genshinmaps](https://genshin.gamedot.org/?mid=genshinmaps)
 
-- 감우눈난나
+## Features
 
-## 이미지 출처
+- Underground Map 지하 맵 기능
+- View pins only active map 활성화된 맵의 핀만 표시
 
-- 지하맵 이미지: 祈鸢ya
-- 지하맵 버튼 이미지: 티바트 월드맵
+## Image Sources
+
+- Underground Images: 祈鸢ya
+- Button Images: HoYoLAB Teyvat Interactive Map
