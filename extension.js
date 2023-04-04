@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         게임닷 원신 맵스 확장
 // @namespace    view underground map
-// @version      1.8
+// @version      1.9
 // @description  원신 맵스에 여러 기능을 추가하는 유저스크립트
 // @author       juhyeon-cha
 // @match        https://genshin.gamedot.org/?mid=genshinmaps
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=gamedot.org
-// @updatelog    2023/04/03 v1.8 핀 그룹화 오류 수정
+// @updatelog    2023/04/04 v1.9 핀 그룹화 1개인 경우 단일 핀으로 표시되도록 수정
 // @homepageURL  https://github.com/juhyeon-cha/genshin-maps-extension/
 // @downloadURL  https://github.com/juhyeon-cha/genshin-maps-extension/raw/main/extension.js
 // @updateURL    https://github.com/juhyeon-cha/genshin-maps-extension/raw/main/extension.js
@@ -427,6 +427,7 @@ function adjustMapsLayer() {
     if (IS_VISIBLE_ACTIVE_MAPS_PIN === false) return;
     if (Object.prototype.toString.call(MAPS_ViewPin) != '[object Set]' || MAPS_ViewPin.size <= 0) return;
 
+    const OBJECT_PIN_LAYER = document.getElementById("mapsLayerPoint");
     MAPS_ViewPin.forEach((v) => {
         const arrDrawPin = MAPS_PinDraw.get(v);
         if (Object.prototype.toString.call(arrDrawPin) != '[object Array]' || arrDrawPin.length <= 0) return true;
@@ -436,12 +437,16 @@ function adjustMapsLayer() {
             if (MAPS_State.pinGroup == true && MAPS_PinLoad[point.pin].offcombine == false) {
                 // 핀 그룹화를 위해 평균 구하기.
                 let arrPinGroup = mapPinGroup.get(point.pin);
-                arrPinGroup = arrPinGroup ? arrPinGroup : { x: 0, y: 0, state: 0, length: 0, underground_state: 0, underground_length: 0, point: point };
-                arrPinGroup.x += point.x;
-                arrPinGroup.y += point.y;
+                const isUnderground = point.tag?.includes("지하");
+                arrPinGroup = arrPinGroup ? arrPinGroup : { x: 0, y: 0, state: 0, length: 0, points: [], underground_state: 0, underground_length: 0, point: point };
+                if (IS_UNDERGROUND_ACTIVE === isUnderground) {
+                    arrPinGroup.x += point.x;
+                    arrPinGroup.y += point.y;
+                }
+                arrPinGroup.points.push(point);
                 arrPinGroup.length++;
                 arrPinGroup.state = point.state ? arrPinGroup.state + 1 : arrPinGroup.state;
-                if (point.tag?.includes("지하")) {
+                if (isUnderground) {
                     arrPinGroup.underground_state = point.state ? arrPinGroup.underground_state + 1 : arrPinGroup.underground_state;
                     arrPinGroup.underground_length++;
                 }
@@ -453,18 +458,40 @@ function adjustMapsLayer() {
 
         if (MAPS_State.pinGroup == true) {
             mapPinGroup.forEach((value) => {
+                const arrData = v.split("/", 2);
                 const pt = value.point;
-                const objectPoint = document.querySelector(`.maps-point.group[data-pin="${pt.pin}"][data-point="${pt.point}"]`);
-                if (objectPoint) {
+                const pin = document.querySelector(`.maps-point.group[data-pin="${pt.pin}"][data-point="${pt.point}"]`);
+                if (pin) {
+                    pin.remove();
                     const state = IS_UNDERGROUND_ACTIVE ? value.underground_state : (value.state - value.underground_state);
                     const length = IS_UNDERGROUND_ACTIVE ? value.underground_length : (value.length - value.underground_length);
-                    const p = objectPoint.querySelector('p');
-                    p.innerText = state + "/" + length;
-                    objectPoint.setAttribute("data-state", state == length ? "true" : "false");
-                    if (IS_UNDERGROUND_ACTIVE && value.underground_length >= 1) {
-                        objectPoint.dataset.isUnderground = true;
+
+                    let objectPoint;
+                    if (length > 1) {
+                        objectPoint = drawPinObject(true, value.point, arrData);
+                        objectPoint.className = "maps-point group";
+
+                        let objectCount = document.createElement("p");
+                        objectCount.innerText = state + "/" + length;
+                        objectPoint.querySelector("div").appendChild(objectCount);
+                        let groupX = value.x / length;
+                        let groupY = value.y / length;
+
+                        objectPoint.setAttribute(
+                            "style",
+                            "transform: translate(" + (groupX + MAPS_RelativeX) + "px, " + (groupY + MAPS_RelativeY) + "px);"
+                        );
+                        objectPoint.setAttribute("data-state", state == length ? "true" : "false");
+                        objectPoint.removeAttribute("data-tip");
+
+                        // 사이즈 설정
+                        objectPoint.style.marginLeft = objectPoint.style.marginTop = "-64px";
+                        OBJECT_PIN_LAYER.appendChild(objectPoint);
                     } else {
-                        delete objectPoint.dataset.isUnderground;
+                        for (const point of value.points) {
+                            objectPoint = drawPinObject(false, point, arrData);
+                            OBJECT_PIN_LAYER.appendChild(objectPoint);
+                        }
                     }
                 }
             });
