@@ -62,7 +62,7 @@ function vanillaSelectBox(domSelector, options) {
     this.onInit = null;
     this.onSearch = null; // if isRemote is true : a user defined function that loads more options from the back
     this.onInitSize = null;
-    this.forbidenAttributes = ["class", "selected", "disabled", "data-text", "data-value", "style"];
+    this.forbidenAttributes = ["class", "selected", "disabled", "data-text", "data-value"];
     this.forbidenClasses = ["active", "disabled"];
     this.userOptions = {
         maxWidth: 500,
