@@ -85,17 +85,20 @@ li.short {
 }
 
 .vsb-main button {
-    min-width: 120px;
-    border-radius: 0;
-    width: 100%;
-    text-align: left;
-    z-index: 1;
-    color: #333;
-    background: white !important;
-    border: 1px solid #999 !important;
-    line-height: 20px;
-    font-size: 14px;
+    border: 1.5px solid #ece5d8 !important;
+    border-radius: 20px;
+    width: 72px;
+    height: 36px;
     padding: 6px 12px;
+    background: rgb(211, 188, 142) !important;
+
+    color: #ece5d8;
+    text-shadow: -1px 0 #3b4354, 0 1px #3b4354, 1px 0 #3b4354, 0 -1px #3b4354;
+    font-size: 18px;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .vsb-main button.disabled {
