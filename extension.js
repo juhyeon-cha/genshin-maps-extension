@@ -1,20 +1,22 @@
 // ==UserScript==
 // @name         게임닷 원신 맵스 확장
 // @namespace    view underground map
-// @version      1.9
+// @version      2.0
 // @description  원신 맵스에 여러 기능을 추가하는 유저스크립트
 // @author       juhyeon-cha
 // @match        https://genshin.gamedot.org/?mid=genshinmaps
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=gamedot.org
-// @updatelog    2023/04/04 v1.9 핀 그룹화 1개인 경우 단일 핀으로 표시되도록 수정
+// @updatelog    2023/04/09 v2.0 보물상자 필터링 기능 추가
 // @homepageURL  https://github.com/juhyeon-cha/genshin-maps-extension/
 // @downloadURL  https://github.com/juhyeon-cha/genshin-maps-extension/raw/main/extension.js
 // @updateURL    https://github.com/juhyeon-cha/genshin-maps-extension/raw/main/extension.js
-// @grant        none
+// @require      https://github.com/juhyeon-cha/genshin-maps-extension/raw/main/js/select-box.js
+// @resource     selectbox_css https://github.com/juhyeon-cha/genshin-maps-extension/raw/main/css/select-box.css
+// @resource     extension_css https://github.com/juhyeon-cha/genshin-maps-extension/raw/main/css/extension.css
+// @grant        GM_getResourceText
+// @grant        GM_addStyle
 // ==/UserScript==
 
-const TOGGLE_OFF = 'data:image/png;base64,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';
-const TOGGLE_ON = 'data:image/png;base64,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';
 const UNDERGROUND_IMAGES = [
     {
         'name': '간다르바_성곽_북_0',
@@ -122,7 +124,7 @@ const UNDERGROUND_IMAGES = [
         'name': '선나원_북_1',
         'url': 'https://i.imgur.com/gB87N9O.png',
         'size': [700, 558, 62],
-        'offset': [5033, 7922]
+        'offset': [5060, 7912]
     },
     {
         'name': '수천삼림_남_0',
@@ -272,100 +274,46 @@ const UNDERGROUND_IMAGES = [
 
 let IS_UNDERGROUND_ACTIVE = false;
 let IS_VISIBLE_ACTIVE_MAPS_PIN = true;
+let IS_CHEST_PIN_LOADED = {};
+IS_CHEST_PIN_LOADED.value = MAPS_PinLoad.filter(value => value.name?.includes("보물상자")).length > 0;
 
-function addExtensionStyle() {
-    const style = document.createElement('style');
-    style.innerHTML = `
-    .maps-extension {
-        user-select: none;
-        display: block;
-        position: fixed;
-        right: 20px;
-        bottom: 65px;
-    }
-    @media screen and (max-width: 1280px) and (min-width:768px) and (min-height:500px) {
-        #mapsAddonsMenu.close ~ .maps-extension {
-            bottom: 45px !important;
+let handlers = Symbol('handlers');
+
+function makeObservable(target) {
+    target[handlers] = [];
+
+    target.observe = function (handler) {
+        this[handlers].push(handler);
+    };
+
+    return new Proxy(target, {
+        set(target, property, value, receiver) {
+            let success = Reflect.set(...arguments);
+            if (success) {
+                target[handlers].forEach(handler => handler(property, value));
+            }
+            return success;
         }
-        #mapsAddonsMenu:not(.close) ~ .maps-extension {
-            bottom: 120px !important;
-        }
-    }
-    @media screen and (max-width: 768px) and (orientation: portrait), only screen and (max-height: 500px) and (orientation: landscape) {
-        .maps-extension {
-            right: 5px !important;
-            bottom: 11.5vh !important;
-        }
-    }
-    @media screen and (max-height: 500px) and (min-width: 400px) {
-        .maps-extension {
-            right: 16vh !important;
-            bottom: 10px !important;
-        }
-        .maps-extension-switch {
-            width: 15vh !important;
-            height: 7.5vh !important;
-        }
-        .maps-extension-switch-label {
-            width: 15vh !important;
-            font-size: 12px !important;
-            padding-top: 3px !important;
-            padding-bottom: 1px !important;
-        }
-    }
-    .maps-extension-switch {
-        width: 72px;
-        height: 36px;
-        background-image: url(${TOGGLE_OFF});
-        background-position: 50%;
-        background-repeat: no-repeat;
-        background-size: 100%;
-        cursor: pointer;
-    }
-    .maps-extension-switch.on {
-        background-image: url(${TOGGLE_ON});
-    }
-    .maps-extension-switch-label {
-        width: 77px;
-        color: #ece5d8;
-        text-shadow: -1px 0 #3b4354, 0 1px #3b4354, 1px 0 #3b4354, 0 -1px #3b4354;
-        font-size: 18px;
-        padding-top: 6px;
-        padding-bottom: 2px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-    .underground-layer {
-        position: absolute;
-        left: 0;
-        top: 0;
-        transform-origin: 0 0;
-        contain: strict;
-    }
-    .underground-image {
-        position: absolute;
-        background-size: 100%;
-        z-index: 2;
-        opacity: 1;
-    }
-    .underground-image>div {
-        width: 100%;
-        height: 100%;
-        background-position: center;
-        background-repeat: no-repeat;
-    }
-    `;
-    document.head.appendChild(style);
+    });
 }
 
 function addMapsExtensionSwitch() {
     var template = document.createElement('template');
     template.innerHTML = `
     <div class="maps-extension">
-        <div id="visibleActiveMapsPinSwitchLabel" class="maps-extension-switch-label">활성맵 핀</div>
+        <div class="chest-pin pc-only">
+            <div class="maps-extension-switch-label">상자 필터</div>
+            <select id="chest-filter" multiple>
+                <option value="평범한" style="color: gray;">평범한</option>
+                <option value="정교한" style="color: #9ee0d4;">정교한</option>
+                <option value="진귀한" style="color: #e6ba7b;">진귀한</option>
+                <option value="화려한" style="color: #ff6c38;">화려한</option>
+                <option value="신묘한" style="color: #accb29;">신묘한</option>
+            </select>
+        </div>
+        <div class="maps-extension-switch-label">활성맵 핀</div>
         <div id="visibleActiveMapsPinSwitch" class="maps-extension-switch on"></div>
-        <div id="undergroundSwitchLabel" class="maps-extension-switch-label">지하 맵</div>
+        <div class="maps-extension-switch-label">지하 맵</div>
         <div id="undergroundSwitch" class="maps-extension-switch"></div>
     </div>`;
 
@@ -423,10 +371,46 @@ function removeUndergroundLayer() {
     document.getElementById('mapsLayerUnderground').remove();
 }
 
+let CHEST_FILTER;
+function addChestPinEvent() {
+    IS_CHEST_PIN_LOADED = makeObservable(IS_CHEST_PIN_LOADED);
+    IS_CHEST_PIN_LOADED.observe((property, isPinLoaded) => {
+        const chestPinEl = document.querySelector('.maps-extension > .chest-pin');
+        isPinLoaded ? chestPinEl.classList.remove('hide') : chestPinEl.classList.add('hide');
+        CHEST_FILTER?.setValue('all');
+    });
+    const chestPinEl = document.querySelector('.maps-extension > .chest-pin');
+    IS_CHEST_PIN_LOADED.value ? chestPinEl.classList.remove('hide') : chestPinEl.classList.add('hide');
+
+    CHEST_FILTER = new vanillaSelectBox("#chest-filter", {
+        placeHolder: "상자 선택",
+        translations: {
+            "all": "전체",
+            "item": "item",
+            "items": "items",
+            "selectAll": "전체",
+            "clearAll": "전체"
+        },
+        disableSelectAll: false,
+        keepInlineStyles: false,
+        keepInlineCaretStyles: false
+    });
+    CHEST_FILTER.setValue('all');
+    for (const li of CHEST_FILTER.ul.childNodes) {
+        if (li.dataset.value !== 'all') {
+            li.textContent += ' ■';
+        }
+    }
+    document.getElementById('chest-filter').addEventListener('change', (ev) => {
+        setPinObjectRefresh();
+    });
+}
+
 function adjustMapsLayer() {
     if (IS_VISIBLE_ACTIVE_MAPS_PIN === false) return;
     if (Object.prototype.toString.call(MAPS_ViewPin) != '[object Set]' || MAPS_ViewPin.size <= 0) return;
 
+    const filter = document.getElementById('chest-filter');
     const OBJECT_PIN_LAYER = document.getElementById("mapsLayerPoint");
     MAPS_ViewPin.forEach((v) => {
         const arrDrawPin = MAPS_PinDraw.get(v);
@@ -434,7 +418,18 @@ function adjustMapsLayer() {
 
         mapPinGroup = new Map();
         arrDrawPin.forEach((point) => {
-            if (MAPS_State.pinGroup == true && MAPS_PinLoad[point.pin].offcombine == false) {
+            const arrPinData = MAPS_PinLoad[point.pin];
+            if (point.category && arrPinData.category[point.category]) {
+                const arrCategory = arrPinData.category[point.category];
+                if (arrPinData.name?.includes("보물상자")) {
+                    const selectedValues = Array.from(filter.selectedOptions).map(v => v.value);
+                    if (selectedValues.includes(arrCategory.name) == false) {
+                        document.querySelector(`.maps-point[data-pin="${point.pin}"][data-point="${point.point}"]`)?.remove();
+                        return true;
+                    }
+                }
+            }
+            if (MAPS_State.pinGroup == true && arrPinData.offcombine == false) {
                 // 핀 그룹화를 위해 평균 구하기.
                 let arrPinGroup = mapPinGroup.get(point.pin);
                 const isUnderground = point.tag?.includes("지하");
@@ -526,8 +521,33 @@ drawMapsLayer = (function (originDrawMapsLayer) {
 
 }(drawMapsLayer));
 
+removePin = (function (originRemovePin) {
+    'use strict';
+
+    const _proxyLoadedPin = () => {
+        IS_CHEST_PIN_LOADED.value = MAPS_PinLoad.filter(value => value.name?.includes("보물상자")).length > 0;
+        MAPS_PinLoad = makeObservable(MAPS_PinLoad);
+        MAPS_PinLoad.observe((index, value) => {
+            if (Object.prototype.toString.call(value) == '[object Object]' && value.name?.includes("보물상자")) {
+                IS_CHEST_PIN_LOADED.value = true;
+            }
+        });
+    }
+
+    _proxyLoadedPin();
+    return (boolGroup, pinIndex, boolTabUpdate) => {
+        originRemovePin(boolGroup, pinIndex, boolTabUpdate);
+        _proxyLoadedPin();
+    };
+
+}(removePin));
+
 // Main
 (function () {
-    addExtensionStyle();
+    const selectbox_css = GM_getResourceText("selectbox_css");
+    GM_addStyle(selectbox_css);
+    const extension_css = GM_getResourceText("extension_css");
+    GM_addStyle(extension_css);
     addMapsExtensionSwitch();
+    addChestPinEvent();
 }());
