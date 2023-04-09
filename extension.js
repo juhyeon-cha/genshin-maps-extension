@@ -301,7 +301,7 @@ function addMapsExtensionSwitch() {
     var template = document.createElement('template');
     template.innerHTML = `
     <div class="maps-extension">
-        <div class="chest-pin pc-only">
+        <div class="chest-pin">
             <div class="maps-extension-switch-label">상자 필터</div>
             <select id="chest-filter" multiple>
                 <option value="평범한" style="color: gray;">평범한</option>
