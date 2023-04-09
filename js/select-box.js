@@ -52,9 +52,7 @@ function vanillaSelectBox(domSelector, options) {
     this.searchZone = null;
     this.inputBox = null;
     this.disabledItems = [];
-    this.ulminWidth = 140;
     this.ulmaxWidth = 280;
-    this.ulminHeight = 25;
     this.maxOptionWidth = Infinity;
     this.maxSelect = Infinity;
     this.isInitRemote = false;
@@ -138,7 +136,6 @@ function vanillaSelectBox(domSelector, options) {
 
         if (options.maxOptionWidth != undefined && !isNaN(options.maxOptionWidth) && options.maxOptionWidth >= 20) {
             this.maxOptionWidth = options.maxOptionWidth;
-            this.ulminWidth = options.maxOptionWidth + 60;
             this.ulmaxWidth = options.maxOptionWidth + 60;
         }
 
@@ -279,9 +276,7 @@ function vanillaSelectBox(domSelector, options) {
         this.drop.appendChild(this.ul);
 
         this.ul.style.maxHeight = this.userOptions.maxHeight + "px";
-        this.ul.style.minWidth = this.ulminWidth + "px";
         this.ul.style.maxWidth = this.ulmaxWidth + "px";
-        this.ul.style.minHeight = this.ulminHeight + "px";
         if (this.isMultiple) {
             this.ul.classList.add("multi");
             if (!self.userOptions.disableSelectAll) {
