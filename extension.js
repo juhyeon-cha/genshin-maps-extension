@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         게임닷 원신 맵스 확장
 // @namespace    view underground map
-// @version      2.2
+// @version      2.3
 // @description  원신 맵스에 여러 기능을 추가하는 유저스크립트
 // @author       juhyeon-cha
 // @match        https://genshin.gamedot.org/?mid=genshinmaps
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=gamedot.org
-// @updatelog    2023/04/12 v2.2 3.6 패치 이후 지하맵 위치 보정
+// @updatelog    2023/04/12 v2.3 3.6 패치 지하맵 추가
 // @homepageURL  https://github.com/juhyeon-cha/genshin-maps-extension/
 // @downloadURL  https://github.com/juhyeon-cha/genshin-maps-extension/raw/main/extension.js
 // @updateURL    https://github.com/juhyeon-cha/genshin-maps-extension/raw/main/extension.js
@@ -18,9 +18,10 @@
 // ==/UserScript==
 
 let UNDERGROUND_IMAGES = [
+    // 숲
     {
         "name": "간다르바_성곽_북_0",
-        "url": "https://i.imgur.com/IAWkgXA.png",
+        "url": "/img/숲/간다르바_성곽_북_0.png",
         "size": [
             700,
             778,
@@ -33,7 +34,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "간다언덕_동_0",
-        "url": "https://i.imgur.com/oYuceah.png",
+        "url": "/img/숲/간다언덕_동_0.png",
         "size": [
             700,
             1080,
@@ -46,7 +47,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "과거의_바나라나",
-        "url": "https://i.imgur.com/OSf2gnh.png",
+        "url": "/img/숲/과거의_바나라나.png",
         "size": [
             700,
             552,
@@ -59,7 +60,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "과거의_바나라나_북_0",
-        "url": "https://i.imgur.com/mVAg3fY.png",
+        "url": "/img/숲/과거의_바나라나_북_0.png",
         "size": [
             800,
             1149,
@@ -72,7 +73,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "과거의_바나라나_북_1",
-        "url": "https://i.imgur.com/1FghM9T.png",
+        "url": "/img/숲/과거의_바나라나_북_1.png",
         "size": [
             700,
             871,
@@ -85,7 +86,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "다흐리의_폐허_0",
-        "url": "https://i.imgur.com/IhyqBG5.png",
+        "url": "/img/숲/다흐리의_폐허_0.png",
         "size": [
             800,
             396,
@@ -98,7 +99,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "데반타카산_남동_0",
-        "url": "https://i.imgur.com/TnRoFcb.png",
+        "url": "/img/숲/데반타카산_남동_0.png",
         "size": [
             700,
             640,
@@ -111,7 +112,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "데반타카산_남서_0",
-        "url": "https://i.imgur.com/BOSKeFK.png",
+        "url": "/img/숲/데반타카산_남서_0.png",
         "size": [
             800,
             665,
@@ -124,7 +125,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "데반타카산_동_0",
-        "url": "https://i.imgur.com/ehQGwq3.png",
+        "url": "/img/숲/데반타카산_동_0.png",
         "size": [
             700,
             503,
@@ -137,7 +138,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "데반타카산_북동_0",
-        "url": "https://i.imgur.com/YluvQYF.png",
+        "url": "/img/숲/데반타카산_북동_0.png",
         "size": [
             600,
             692,
@@ -150,7 +151,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "마우티이마_숲_남동_0",
-        "url": "https://i.imgur.com/GsOR3Uv.png",
+        "url": "/img/숲/마우티이마_숲_남동_0.png",
         "size": [
             700,
             739,
@@ -163,7 +164,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "마우티이마_숲_남동_1",
-        "url": "https://i.imgur.com/L4I3MJU.png",
+        "url": "/img/숲/마우티이마_숲_남동_1.png",
         "size": [
             296,
             200,
@@ -176,7 +177,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "마우티이마_숲_북동_0",
-        "url": "https://i.imgur.com/TZNzERN.png",
+        "url": "/img/숲/마우티이마_숲_북동_0.png",
         "size": [
             700,
             576,
@@ -189,7 +190,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "마우티이마_숲_서_0",
-        "url": "https://i.imgur.com/d85lP4L.png",
+        "url": "/img/숲/마우티이마_숲_서_0.png",
         "size": [
             700,
             964,
@@ -202,7 +203,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "비마라_마을_남서_0",
-        "url": "https://i.imgur.com/so8atDV.png",
+        "url": "/img/숲/비마라_마을_남서_0.png",
         "size": [
             700,
             627,
@@ -215,7 +216,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "비마라_마을_동_0",
-        "url": "https://i.imgur.com/3GRx15c.png",
+        "url": "/img/숲/비마라_마을_동_0.png",
         "size": [
             700,
             337,
@@ -228,7 +229,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "선나원_북_0",
-        "url": "https://i.imgur.com/kvKcR5C.png",
+        "url": "/img/숲/선나원_북_0.png",
         "size": [
             802,
             658,
@@ -241,7 +242,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "선나원_북_1",
-        "url": "https://i.imgur.com/gB87N9O.png",
+        "url": "/img/숲/선나원_북_1.png",
         "size": [
             700,
             558,
@@ -254,7 +255,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "수천삼림_남_0",
-        "url": "https://i.imgur.com/JdnQgjG.png",
+        "url": "/img/숲/수천삼림_남_0.png",
         "size": [
             700,
             647,
@@ -267,7 +268,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "아란나라_동_0",
-        "url": "https://i.imgur.com/BkbmTpH.png",
+        "url": "/img/숲/아란나라_동_0.png",
         "size": [
             800,
             687,
@@ -280,7 +281,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "야스나_유경_남_0",
-        "url": "https://i.imgur.com/ckZNZsL.png",
+        "url": "/img/숲/야스나_유경_남_0.png",
         "size": [
             700,
             507,
@@ -293,7 +294,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "차트라캄_동굴_0",
-        "url": "https://i.imgur.com/K9iZfPB.png",
+        "url": "/img/숲/차트라캄_동굴_0.png",
         "size": [
             700,
             1081,
@@ -304,9 +305,10 @@ let UNDERGROUND_IMAGES = [
             1723
         ]
     },
+    // 사막
     {
         "name": "다르알시파_0",
-        "url": "https://i.imgur.com/3qLdt4p.png",
+        "url": "/img/사막/다르알시파_0.png",
         "size": [
             700,
             828,
@@ -319,7 +321,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "다마반드산_0",
-        "url": "https://i.imgur.com/2WHSZFL.png",
+        "url": "/img/사막/다마반드산_0.png",
         "size": [
             800,
             761,
@@ -332,7 +334,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "다섯_오아시스의_생존자_0",
-        "url": "https://i.imgur.com/qD1zPv5.png",
+        "url": "/img/사막/다섯_오아시스의_생존자_0.png",
         "size": [
             700,
             400,
@@ -345,7 +347,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "다흐리_계곡_서_0",
-        "url": "https://i.imgur.com/OcLNox6.png",
+        "url": "/img/사막/다흐리_계곡_서_0.png",
         "size": [
             700,
             856,
@@ -358,7 +360,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "다흐리_계곡_서_1",
-        "url": "https://i.imgur.com/28VTfpy.png",
+        "url": "/img/사막/다흐리_계곡_서_1.png",
         "size": [
             700,
             974,
@@ -371,7 +373,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "도피의_언덕_남서_0",
-        "url": "https://i.imgur.com/0GbvGew.png",
+        "url": "/img/사막/도피의_언덕_남서_0.png",
         "size": [
             2290,
             840,
@@ -384,7 +386,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "부러진_정강이_협곡_0",
-        "url": "https://i.imgur.com/SESBHtN.png",
+        "url": "/img/사막/부러진_정강이_협곡_0.png",
         "size": [
             700,
             626,
@@ -397,7 +399,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "세_운하의_땅_북_0",
-        "url": "https://i.imgur.com/iQKgK1j.png",
+        "url": "/img/사막/세_운하의_땅_북_0.png",
         "size": [
             600,
             621,
@@ -410,7 +412,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "세_운하의_땅_0",
-        "url": "https://i.imgur.com/LK56eHQ.png",
+        "url": "/img/사막/세_운하의_땅_0.png",
         "size": [
             800,
             637,
@@ -423,7 +425,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "적왕의_무덤_0",
-        "url": "https://i.imgur.com/4AoJPpC.png",
+        "url": "/img/사막/적왕의_무덤_0.png",
         "size": [
             1514,
             1579,
@@ -436,7 +438,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "적왕의_무덤_1",
-        "url": "https://i.imgur.com/bbXIMpW.png",
+        "url": "/img/사막/적왕의_무덤_1.png",
         "size": [
             700,
             1162,
@@ -449,7 +451,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "적왕의_무덤_서_0",
-        "url": "https://i.imgur.com/ZrDV2JC.png",
+        "url": "/img/사막/적왕의_무덤_서_0.png",
         "size": [
             600,
             1398,
@@ -462,7 +464,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "신이_버린_신전_0",
-        "url": "https://i.imgur.com/LQqO1Cy.png",
+        "url": "/img/사막/신이_버린_신전_0.png",
         "size": [
             700,
             727,
@@ -475,7 +477,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "신이_버린_신전_북_0",
-        "url": "https://i.imgur.com/MmVuqWP.png",
+        "url": "/img/사막/신이_버린_신전_북_0.png",
         "size": [
             700,
             550,
@@ -488,7 +490,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "신이_버린_신전_북_1",
-        "url": "https://i.imgur.com/wbttkgz.png",
+        "url": "/img/사막/신이_버린_신전_북_1.png",
         "size": [
             500,
             377,
@@ -501,7 +503,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "알_아지프의_모래_0",
-        "url": "https://i.imgur.com/qLHMu2T.png",
+        "url": "/img/사막/알_아지프의_모래_0.png",
         "size": [
             700,
             760,
@@ -514,7 +516,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "영원의_오아시스_0",
-        "url": "https://i.imgur.com/lH0bAk5.png",
+        "url": "/img/사막/영원의_오아시스_0.png",
         "size": [
             700,
             942,
@@ -527,7 +529,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "자갈의_언덕_0",
-        "url": "https://i.imgur.com/FTOn4CI.png",
+        "url": "/img/사막/자갈의_언덕_0.png",
         "size": [
             700,
             718,
@@ -540,7 +542,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "자갈의_언덕_1",
-        "url": "https://i.imgur.com/5BiYsbf.png",
+        "url": "/img/사막/자갈의_언덕_1.png",
         "size": [
             700,
             1075,
@@ -553,7 +555,7 @@ let UNDERGROUND_IMAGES = [
     },
     {
         "name": "희생_함정_0",
-        "url": "https://i.imgur.com/dJhrFfI.png",
+        "url": "/img/사막/희생_함정_0.png",
         "size": [
             800,
             732,
@@ -562,6 +564,98 @@ let UNDERGROUND_IMAGES = [
         "offset": [
             -5589,
             4242
+        ]
+    },
+    // 3.6
+    {
+        "name": "감로_꽃바다_북_0",
+        "url": "/img/사막/3.6/감로_꽃바다_북_0.png",
+        "size": [
+            4000,
+            2600,
+            19
+        ],
+        "offset": [
+            -8436,
+            160
+        ]
+    },
+    {
+        "name": "바르솜_정상_0",
+        "url": "/img/사막/3.6/바르솜_정상_0.png",
+        "size": [
+            4000,
+            2600,
+            9
+        ],
+        "offset": [
+            -8681,
+            19
+        ]
+    },
+    {
+        "name": "아시파트라바나_늪_북_0",
+        "url": "/img/사막/3.6/아시파트라바나_늪_북_0.png",
+        "size": [
+            4000,
+            2600,
+            15
+        ],
+        "offset": [
+            -8933,
+            90
+        ]
+    },
+    {
+        "name": "아시파트라바나_늪_서_0",
+        "url": "/img/사막/3.6/아시파트라바나_늪_서_0.png",
+        "size": [
+            2630,
+            2767,
+            21
+        ],
+        "offset": [
+            -8493,
+            -82
+        ]
+    },
+    {
+        "name": "테미르산_동_1",
+        "url": "/img/사막/3.6/테미르산_동_1.png",
+        "size": [
+            4000,
+            2600,
+            19
+        ],
+        "offset": [
+            -8820,
+            741
+        ]
+    },
+    {
+        "name": "테미르산_동_0",
+        "url": "/img/사막/3.6/테미르산_동_0.png",
+        "size": [
+            4000,
+            2600,
+            18
+        ],
+        "offset": [
+            -8856,
+            646
+        ]
+    },
+    {
+        "name": "투니기_흑연_0",
+        "url": "/img/사막/3.6/투니기_흑연_0.png",
+        "size": [
+            5005,
+            2699,
+            20
+        ],
+        "offset": [
+            -9731,
+            430
         ]
     }
 ];
@@ -647,10 +741,11 @@ function addUndergroundLayer() {
     UNDERGROUND_IMAGES.forEach((image, index) => {
         const x = image.offset[0] + MAPS_RelativeX;
         const y = image.offset[1] + MAPS_RelativeY;
+        const url = `https://github.com/juhyeon-cha/genshin-maps-extension/raw/main/${image.url}`;
         var template = document.createElement('template');
         template.innerHTML = `
         <div class="underground-image" data-index="${index}" data-name="${image.name}" style="width: ${image.size[0]}px; height: ${image.size[1]}px; transform: translate(${x}px, ${y}px) scale(1);">
-            <div style="background-image: url(${image.url}); background-size: ${image.size[2]}%"></div>
+            <div style="background-image: url(${url}); background-size: ${image.size[2]}%"></div>
         </div>`;
 
         template = template.content.childNodes[1];
@@ -854,4 +949,14 @@ removePin = (function (originRemovePin) {
     GM_addStyle(extension_css);
     addMapsExtensionSwitch();
     addChestPinEvent();
+
+    // 지도 클릭 이벤트
+    objectViewer.addEventListener("click", function (e) {
+        var x = e.clientX + objectViewer.scrollLeft;
+        x = Math.round((x / MAPS_Scale) * 100);
+        var y = e.clientY + objectViewer.scrollTop;
+        y = Math.round((y / MAPS_Scale) * 100);
+        // console.log("{x: " + (x - MAPS_RelativeX) + ",y: " + (y - MAPS_RelativeY) + ",text: ''},");
+        // console.log("클릭 위치", e.target, x - MAPS_RelativeX, y - MAPS_RelativeY, Math.floor((x - MAPS_RelativeX) / MAPS_Block), Math.floor((y - MAPS_RelativeY) / MAPS_Block));
+    });
 }());
