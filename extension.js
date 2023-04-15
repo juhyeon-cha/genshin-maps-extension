@@ -904,7 +904,7 @@ function drawUndergroundLayer() {
 function removeDisabledMapsPin() {
     if (!IS_VISIBLE_ACTIVE_MAPS_PIN) return;
 
-    const dataSelector = IS_UNDERGROUND_ACTIVE ? ':not([data-is-underground])' : '[data-is-underground]';
+    const dataSelector = IS_UNDERGROUND_ACTIVE ? ':not([data-is-underground])' + ':not([data-tip*="지하 및 실내 구역 입구"])' : '[data-is-underground]';
     document.querySelectorAll(`#mapsLayerPoint > .maps-point${dataSelector}`).forEach(element => element.remove());
 }
 
