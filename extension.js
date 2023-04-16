@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         게임닷 원신 맵스 확장
 // @namespace    view underground map
-// @version      2.3
+// @version      2.4
 // @description  원신 맵스에 여러 기능을 추가하는 유저스크립트
 // @author       juhyeon-cha
 // @match        https://genshin.gamedot.org/?mid=genshinmaps
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=gamedot.org
-// @updatelog    2023/04/12 v2.3 3.6 패치 지하맵 추가
+// @updatelog    2023/04/16 v2.4 지하 입구 핀 사라지지 않도록 수정
 // @homepageURL  https://github.com/juhyeon-cha/genshin-maps-extension/
 // @downloadURL  https://github.com/juhyeon-cha/genshin-maps-extension/raw/main/extension.js
 // @updateURL    https://github.com/juhyeon-cha/genshin-maps-extension/raw/main/extension.js
@@ -904,7 +904,7 @@ function drawUndergroundLayer() {
 function removeDisabledMapsPin() {
     if (!IS_VISIBLE_ACTIVE_MAPS_PIN) return;
 
-    const dataSelector = IS_UNDERGROUND_ACTIVE ? ':not([data-is-underground])' + ':not([data-tip*="지하 및 실내 구역 입구"])' : '[data-is-underground]';
+    const dataSelector = IS_UNDERGROUND_ACTIVE ? ':not([data-is-underground]):not([data-tip*="지하 및 실내 구역 입구"])' : '[data-is-underground]';
     document.querySelectorAll(`#mapsLayerPoint > .maps-point${dataSelector}`).forEach(element => element.remove());
 }
 
