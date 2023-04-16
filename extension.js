@@ -18,7 +18,7 @@
 // @grant        GM_addStyle
 // ==/UserScript==
 
-let UNDERGROUND_IMAGES = JSON.parse(GM_getResourceText("images_json"));
+let UNDERGROUND_IMAGES = eval(GM_getResourceText("images_json"));
 
 let IS_UNDERGROUND_ACTIVE = false;
 let IS_VISIBLE_ACTIVE_MAPS_PIN = true;
